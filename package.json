@@ -15,5 +15,17 @@
   "bugs": {
     "url": "https://github.com/pavelko1608/node-excel/issues"
   },
-  "homepage": "https://github.com/pavelko1608/node-excel#readme"
+  "homepage": "https://github.com/pavelko1608/node-excel#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "cookie-parser": "^1.4.3",
+    "debug": "^2.6.8",
+    "express": "^4.15.3",
+    "jade": "^1.11.0",
+    "morgan": "^1.8.2",
+    "node-excel-to-json": "0.0.3",
+    "nodemon": "^1.11.0",
+    "sequelize": "^4.1.0",
+    "sqlite3": "^3.1.8"
+  }
 }
