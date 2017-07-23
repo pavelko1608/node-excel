@@ -20,12 +20,13 @@
     "body-parser": "^1.17.2",
     "cookie-parser": "^1.4.3",
     "debug": "^2.6.8",
+    "excel-as-json": "^2.0.1",
     "express": "^4.15.3",
+    "fs": "0.0.1-security",
     "jade": "^1.11.0",
+    "mongodb": "^2.2.30",
+    "mongoose": "^4.11.4",
     "morgan": "^1.8.2",
-    "node-excel-to-json": "0.0.3",
-    "nodemon": "^1.11.0",
-    "sequelize": "^4.1.0",
-    "sqlite3": "^3.1.8"
+    "nodemon": "^1.11.0"
   }
 }

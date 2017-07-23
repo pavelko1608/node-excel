@@ -1,0 +1,14 @@
+extends ./layout
+block content  
+	div(class="welcome") 
+			h3 Welcome, Hope y'all are going to enjoy this test app!
+	hr
+	div(class="media-container")
+		each unit in data
+			ul
+				li #{unit.Imei}
+				li #{unit.CurrentDateTime}
+				li #{unit.GPSDateTime}
+				li #{unit.Datatype}
+				li #{unit.Address}
+				li #{unit.Distance}
