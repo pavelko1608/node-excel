@@ -4,75 +4,29 @@ var cookieParser = require("cookie-parser")
 var bodyParser = require("body-parser")
 var fs = require("fs")
 var convertExcel = require('excel-as-json').processFile
+var mongo = require("mongodb");
+var mongoose = require("mongoose");
+var Data = require("./models/Data");
+var db = require("./db");
 
 var app = express()
 
-//SQLITE CONNECTION
-const sequelize = new Sequelize('database', null, null, {
-  dialect: 'sqlite',
-  storage: './data.sqlite'
-})
-
-//  SYNC SCHEMA
-sequelize
-  .sync({ force: true })
-  .then(function(err) {
-    console.log('It worked!')
-  }, function (err) {
-    console.log('An error occurred while creating the table:', err)
-  })
-
-//SEQUELIZE AUTHENTICATION
-sequelize
-  .authenticate()
-  .then(function(err) {
-    console.log('Connection has been established successfully.')
-  }, function (err) {
-    console.log('Unable to connect to the database:', err)
-  })
-
-//DEFINING MODEL 
-const Data = sequelize.define('data', {
-  Imei: {
-    allowNull: false,
-    primaryKey: true,
-    type: Sequelize.INTEGER
-  },	
-  CurrentDateTime: {
-  	allowNull: false,
-    type: Sequelize.TIME
-  },
-  GPSDateTime: {
-  	allowNull: false,
-    type: Sequelize.TIME
-  },
-  Datatype: {
-    type: Sequelize.INTEGER
-  },
-  Address: {
-  	allowNull: false,
-  	type: Sequelize.STRING
-  },
-  Distance: {
-  	allowNull: false,
-  	type: Sequelize.INTEGER
-  }
-}) 
+mongoose.connect("mongodb://localhost:27017/node-test");
+collection = mongoose.connection.collection('data');
 
 convertExcel("logging.xlsx", "logging.json")
 data = fs.readFileSync("logging.json")
 var jsonData = JSON.parse(data)
 jsonData.forEach((unit) => {
-	Data.create({
-				Imei: unit.Imei, 
-				CurrentDateTime: unit.CurrentDateTime,
-				Datatype: unit.Datatype,
-				GPSDateTime: unit.GPSDateTime,
-				Address: unit.Address,
-				Distance: unit.Distance
-				 }).then((err, data) =>{
-				 	data.save()
-				 })
+	var newUnit = new Data({
+		Imei: unit.Imei, 
+		CurrentDateTime: unit.CurrentDateTime,
+		Datatype: unit.Datatype,
+		GPSDateTime: unit.GPSDateTime,
+		Address: unit.Address,
+		Distance: unit.Distance
+	})
+	newUnit.save()
 })
 
 //BODYPARSER MIDDLEWARE
@@ -101,8 +55,8 @@ app.use(express.static(path.join(__dirname, "public")))
 //ROUTES
 app.
 	get("/task_1", (req, res) => {
-		Data.findAll().then((data) => {
-			res.render("index", {data: data})
+		collection.findAll((err, data) => {
+			res.render("inted", {data: data})
 		})
 	})
 
