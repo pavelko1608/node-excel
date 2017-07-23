@@ -8,8 +8,6 @@ var mongo = require("mongodb")
 var mongoose = require("mongoose")
 var Data = require("./models/Data")
 var db = require("./db")
-var moment = require('moment')
-moment().format()
 
 var app = express()
 
