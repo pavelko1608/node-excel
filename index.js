@@ -4,15 +4,16 @@ var cookieParser = require("cookie-parser")
 var bodyParser = require("body-parser")
 var fs = require("fs")
 var convertExcel = require('excel-as-json').processFile
-var mongo = require("mongodb");
-var mongoose = require("mongoose");
-var Data = require("./models/Data");
-var db = require("./db");
+var mongo = require("mongodb")
+var mongoose = require("mongoose")
+var Data = require("./models/Data")
+var db = require("./db")
+var moment = require('moment')
+moment().format()
 
 var app = express()
 
 mongoose.connect("mongodb://localhost:27017/node-test");
-collection = mongoose.connection.collection('data');
 
 convertExcel("logging.xlsx", "logging.json")
 data = fs.readFileSync("logging.json")
@@ -41,22 +42,27 @@ app.set("view engine", "jade")
 //SET STATIC FOLDER
 app.use(express.static(path.join(__dirname, "public")))
 
-	// node_xj({
- //    		input: "./logging.xlsx",  // input xlsx
- //    		output: "./output.json" // output json 
- //  		}, function(err, result) {
- //    			if(err) {
- //      				console.log(err);
- //    			} else {
- //    				var content = result
- //    			}
- //  		});
-
 //ROUTES
-app.
-	get("/task_1", (req, res) => {
-		collection.findAll((err, data) => {
-			res.render("inted", {data: data})
+app
+	.get("/task_1", (req, res) => {
+		Data.find({}, function(err, data) {
+			res.render("index", {data: data})
+		})
+	})
+	.get("/task_2", (req, res) => {
+		Data.find({Datatype: 1}, (err, data_1) => {
+			Data.find({Datatype: 2}, (err, data_2) => {
+					for(var i = 0; i < data_1.length; i++) {
+						hours = new Date(new Date(data_2[i].CurrentDateTime) - new Date(data_1[i].CurrentDateTime)).getHours() - 2
+						minutes = new Date(new Date(data_2[i].CurrentDateTime) - new Date(data_1[i].CurrentDateTime)).getMinutes()
+						if (minutes.toString().length < 2) {
+							minutes = "0" + minutes
+						}
+ 						data_2[i].CurrentDateTime = "" + hours + ":" + minutes
+						data_2[i].Distance = data_2[i].Distance - data_1[i].Distance
+					}
+				res.render("index_2", {data: data_2})
+			})
 		})
 	})
 

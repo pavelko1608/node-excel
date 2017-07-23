@@ -7,7 +7,7 @@ var DataSchema = mongoose.Schema({
 		type: Number,
 	},
 	CurrentDateTime: {
-		type: Date
+		type: String
 	},
 	GPSDateTime: {
 		type: Date
