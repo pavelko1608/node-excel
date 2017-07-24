@@ -12,7 +12,24 @@ var db = require("./db")
 var app = express()
 
 mongoose.connect("mongodb://localhost:27017/node-test");
+Data.find({}, (err, data) => {
+	for(var i = 0; i < data.length; i++) {
+		data[i].remove()
+	}
+})
 
+
+//BODYPARSER MIDDLEWARE
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended:false}))
+app.use(cookieParser())
+
+//VIEW ENGINE
+app.set("views", path.join(__dirname, "views"))
+app.set("view engine", "jade")
+
+//SET STATIC FOLDER
+app.use(express.static(path.join(__dirname, "public")))
 convertExcel("logging.xlsx", "logging.json")
 data = fs.readFileSync("logging.json")
 var jsonData = JSON.parse(data)
@@ -27,23 +44,11 @@ jsonData.forEach((unit) => {
 	})
 	newUnit.save()
 })
-
-//BODYPARSER MIDDLEWARE
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended:false}))
-app.use(cookieParser())
-
-//VIEW ENGINE
-app.set("views", path.join(__dirname, "views"))
-app.set("view engine", "jade")
-
-//SET STATIC FOLDER
-app.use(express.static(path.join(__dirname, "public")))
-
 //ROUTES
 app
 	.get("/task_1", (req, res) => {
 		Data.find({}, function(err, data) {
+			console.log(data.length)
 			res.render("index", {data: data})
 		})
 	})

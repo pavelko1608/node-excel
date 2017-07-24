@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 //USER SCHEMA
 var DataSchema = mongoose.Schema({
 	Imei: {
-		type: Number,
+		type: Number
 	},
 	CurrentDateTime: {
 		type: String
